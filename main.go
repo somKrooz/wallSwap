@@ -36,6 +36,9 @@ func main() {
 	pathPtr := flag.String("path", "", "Path to process")
 	initPtr := flag.Bool("r", false, "Initialize application")
 
+	envPtr := flag.Bool("env", false, "Get Current Path")
+	setEnvPtr := flag.String("set", "", "Set Current Path")
+
 	flag.Parse()
 
 	if *urlPtr != "" {
@@ -65,6 +68,17 @@ func main() {
 		path := RandomFromFile()
 		if path != "" {
 			SetWallpaper(path)
+		}
+	}
+
+	if *envPtr {
+		path, _ := GetWallpaperPath()
+		fmt.Println("Current Path: ", path)
+
+	}
+	if *setEnvPtr != "" {
+		if SetPath(*setEnvPtr) {
+			fmt.Println("Path Changed To: ", *setEnvPtr)
 		}
 	}
 

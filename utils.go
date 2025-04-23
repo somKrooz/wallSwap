@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -48,35 +45,12 @@ func Exists(Path string) bool {
 	return false
 }
 
-func Downloader(url string) string {
-	sep := strings.Split(url, "/")
-	ext := filepath.Ext(sep[len(sep)-1])
+func SetPath(path string) bool {
+	Path := GetConfigFile()
+	data := fmt.Sprint("path = ", path)
+	err := os.WriteFile(Path, []byte(data), 0644)
+	return err == nil
 
-	res, err := http.Get(url)
-	if err != nil {
-		return ""
-	}
-	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
-
-	Dir := GetDownloadDirectory()
-	path := filepath.Join(Dir, "Wallpaper"+ext)
-
-	// Check if the file exists and overwrite it
-	_, err = os.Stat(path)
-	if err == nil { // File exists
-		err = os.Remove(path)
-		if err != nil {
-			return ""
-		}
-	}
-
-	err = os.WriteFile(path, body, 0644)
-	if err != nil {
-		return ""
-	}
-
-	return path
 }
 
 func LoadingScreen(pchan <-chan bool) {
