@@ -20,6 +20,18 @@ func GetConfigFile() string {
 	return filepath.Join(Temp, "Krooz", "krooz.txt")
 }
 
+func EnsureMainPath() {
+	if _, err := os.Stat(GetDownloadDirectory()); err == nil {
+		return
+	} else if os.IsNotExist(err) {
+		err := os.Mkdir(GetDownloadDirectory(), os.ModeDevice)
+		if err != nil {
+			fmt.Println("Directory Cant be Created....")
+			return
+		}
+	}
+}
+
 func DirExists(Path string, isdir bool) bool {
 	if _, err := os.Stat(Path); err == nil {
 		return true

@@ -35,13 +35,14 @@ func main() {
 	urlPtr := flag.String("url", "", "URL to process")
 	pathPtr := flag.String("path", "", "Path to process")
 	initPtr := flag.Bool("r", false, "Initialize application")
-
 	envPtr := flag.Bool("env", false, "Get Current Path")
 	setEnvPtr := flag.String("set", "", "Set Current Path")
 
 	flag.Parse()
 
 	if *urlPtr != "" {
+		EnsureMainPath()
+
 		URL, err := url.ParseRequestURI(*urlPtr)
 		if err != nil {
 			log.Fatal("This is not a valid URL...")
@@ -65,6 +66,8 @@ func main() {
 	}
 
 	if *initPtr {
+		EnsureMainPath()
+
 		path := RandomFromFile()
 		if path != "" {
 			SetWallpaper(path)
@@ -72,11 +75,17 @@ func main() {
 	}
 
 	if *envPtr {
-		path, _ := GetWallpaperPath()
-		fmt.Println("Current Path: ", path)
+		EnsureMainPath()
+		path, err := GetWallpaperPath()
+		if err != nil {
+			fmt.Println("Bad Param:", err)
+		} else {
+			fmt.Println("path:", path)
+		}
 
 	}
 	if *setEnvPtr != "" {
+		EnsureMainPath()
 		if SetPath(*setEnvPtr) {
 			fmt.Println("Path Changed To: ", *setEnvPtr)
 		}

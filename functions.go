@@ -11,6 +11,8 @@ import (
 )
 
 func GetWallpaperPath() (string, error) {
+	EnsureMainPath()
+
 	path := GetConfigFile()
 	if DirExists(path, false) {
 		Config := string(GetConfigFile())
@@ -18,6 +20,10 @@ func GetWallpaperPath() (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("krooz error: %w", err)
 		}
+		if len(path) <= 0 {
+			return "", fmt.Errorf("krooz error: path is empty")
+		}
+
 		parts := strings.Split(string(path), "=")
 		return strings.TrimSpace(parts[1]), nil
 	}
@@ -28,7 +34,8 @@ func RandomFromFile() string {
 	var Images []string
 	path, err := GetWallpaperPath()
 	if err != nil {
-		return ""
+		fmt.Println("Bad Parm: invalid Directory name")
+		os.Exit(0)
 	}
 	files, err := os.ReadDir(path)
 	if err != nil {
@@ -51,6 +58,8 @@ func RandomFromFile() string {
 }
 
 func Downloader(url string) string {
+	EnsureMainPath()
+
 	sep := strings.Split(url, "/")
 	ext := filepath.Ext(sep[len(sep)-1])
 
