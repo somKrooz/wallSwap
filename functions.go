@@ -60,6 +60,11 @@ func RandomFromFile() string {
 func Downloader(url string) string {
 	EnsureMainPath()
 
+	if strings.Contains(url, "github.com") {
+		url = strings.Replace(url, "github.com", "raw.githubusercontent.com", 1)
+		url = strings.Replace(url, "/blob/", "/", 1)
+	}
+	fmt.Println(url)
 	sep := strings.Split(url, "/")
 	ext := filepath.Ext(sep[len(sep)-1])
 
@@ -67,6 +72,7 @@ func Downloader(url string) string {
 	if err != nil {
 		return ""
 	}
+
 	defer res.Body.Close()
 	body, _ := io.ReadAll(res.Body)
 
