@@ -9,7 +9,7 @@ void init_ini(const char* file, IniFile* ini)
     char buffer[512];
     FILE* fp = fopen(file, "r");
     if (!fp) {
-        printf("Error: can't open file\n");
+        Error("Error: can't open file\n");
         return;
     }
 

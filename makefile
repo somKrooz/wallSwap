@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -I include
-SRCS = main.c Ini.c utility.c
+SRCS = main.c configParser.c utility.c
 TARGET = wall
 
 all:

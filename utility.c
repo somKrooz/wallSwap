@@ -8,6 +8,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
 
+
+
+static const char* RED = "\033[31m";
+static const char* GREEN = "\033[32m";
+static const char* YELLOW = "\033[33m";
+static const char* RESET = "\033[0m\n";
+static const char* BOLD = "\033[1m";
+
+
 bool checkExistance()
 {
 	char* checkPath = getConfigPath();
@@ -54,7 +63,7 @@ const char* getCurrentModule(IniFile* ini){
 	for(int i=0; i<data.size; i++){
 		if (compare("Module", data.parms[i].key)) {
 			if(compare("NULL", data.parms[i].value)){
-				printf("Error: Module Is Null Create One\n");
+				Error("Error: Module Is Null Create One\n");
 				exit(0);
 			}
 			strncpy(buffer, data.parms[i].value, 255);
@@ -83,7 +92,18 @@ const char* getRandomWallpaper(const char* folder)
         if ((attr & FILE_ATTRIBUTE_DIRECTORY) == 0 &&
         (attr & FILE_ATTRIBUTE_HIDDEN) == 0 &&
         (attr & FILE_ATTRIBUTE_SYSTEM) == 0)  {
-            files[count++] = _strdup(findData.cFileName);
+			const char* name = findData.cFileName;
+    		const char* ext = strrchr(name, '.');
+
+		if (ext) {
+			if (_stricmp(ext, ".png") == 0 ||
+				_stricmp(ext, ".jpg") == 0 ||
+				_stricmp(ext, ".jpeg") == 0)
+			{
+				files[count++] = _strdup(name);
+			}
+		}
+
         }
     } while (FindNextFile(hFind, &findData) && count < 1024);
 
@@ -91,9 +111,8 @@ const char* getRandomWallpaper(const char* folder)
 
     int randIndex = rand() % count;
 
-	printf("Applying: %s\n" , files[randIndex]);
+	Log("Applying: %s\n" , files[randIndex]);
 
-    // build full path
     snprintf(randFile, sizeof(randFile), "%s\\%s", folder, files[randIndex]);
     for (int i = 0; i < count; i++) free(files[i]);
     return randFile; 
@@ -125,4 +144,27 @@ const char* getWallpaperFromWeb(const char* path){
 	if(fopen(FullPath,"r")){
 		changeWallpaper(FullPath);
 	}
+}
+
+void Log(const char* fmt, ...)
+{
+	char buffer[512];
+	va_list args;
+    va_start(args, fmt);
+
+	printf("%s %s" , GREEN , BOLD);   
+    vprintf(fmt, args);
+	printf("%s" , RESET);   
+
+    va_end(args);
+}
+
+void Error(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args , fmt);
+	printf("%s %s" , RED , BOLD);
+	vprintf(fmt , args);
+	printf("%s" , RESET);
+	va_end(args);
 }
