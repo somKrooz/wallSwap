@@ -9,7 +9,6 @@
 #include "Windows.h"
 
 
-
 static const char* RED = "\033[31m";
 static const char* GREEN = "\033[32m";
 static const char* YELLOW = "\033[33m";
@@ -148,7 +147,6 @@ const char* getWallpaperFromWeb(const char* path){
 
 void Log(const char* fmt, ...)
 {
-	char buffer[512];
 	va_list args;
     va_start(args, fmt);
 

@@ -3,6 +3,14 @@
 #include "stdio.h"
 #include "string.h"
 
+void trimspace(char* str){
+	char* end = str + strlen(str) - 1;
+	while(end > str && *end == ' ') {
+		*end = '\0';
+		end--;
+	}
+}
+
 void init_ini(const char* file, IniFile* ini)
 {
     char buffer[512];
@@ -38,6 +46,8 @@ void init_ini(const char* file, IniFile* ini)
 			
 			while(*Key == ' ') Key++;  
 			while(*Value == ' ') Value++;
+			trimspace(Value);
+			trimspace(Key);
 
             snprintf(current->parms[current->size].key , MAX_CHAR , "%s" , Key);
             snprintf(current->parms[current->size].value , MAX_CHAR , "%s" , Value);

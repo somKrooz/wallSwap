@@ -1,6 +1,6 @@
 #pragma once
-#define MAX_COUNT 16
-#define MAX_CHAR 32
+#define MAX_COUNT 32
+#define MAX_CHAR 64
 
 typedef struct {
     char key[MAX_CHAR];
