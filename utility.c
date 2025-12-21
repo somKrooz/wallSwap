@@ -137,7 +137,17 @@ const char* getWallpaperFromWeb(const char* path){
 
 
 	char command[MAX_PATH];
-	sprintf(command , "curl -s -o %s %s", FullPath , path);
+	sprintf(
+		command,
+		"curl -L -s "
+		"-H \"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\" "
+		"-H \"Referer: https://wallpapercave.com\" "
+		"-o \"%s\" \"%s\"",
+		FullPath,
+		path
+	);
+	
+	// sprintf(command , "curl -s -o -H Referer: https://wallpapercave.com %s %s", FullPath , path);
 	system(command);
 	
 	if(fopen(FullPath,"r")){
